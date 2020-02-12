@@ -5,6 +5,7 @@ import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 
 import authMiddleware from './app/middleware/auth';
+import permissionMiddleware from './app/middleware/permission';
 
 const routes = new Router();
 
@@ -17,6 +18,7 @@ routes.use(authMiddleware);
 routes.put('/users', UserController.update);
 
 // Permissão
+routes.use(permissionMiddleware);
 
 // Recipients
 routes.post('/recipients', RecipientController.store);
