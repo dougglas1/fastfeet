@@ -105,7 +105,6 @@ dist/
 .dynamodb/
 
 # Temporary folders
-tmp/
 temp/
 
 ### VisualStudioCode ###

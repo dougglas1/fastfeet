@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import sequelize from 'sequelize';
+import { Op } from 'sequelize';
 
 import Recipient from '../models/Recipient';
 
@@ -92,8 +92,6 @@ class RecipientController {
     }
 
     const { name, street, number, zip_code } = req.body;
-
-    const { Op } = sequelize;
 
     // Verifica se os dados não igualam com outro registro
     const recipientExist = await Recipient.findOne({
