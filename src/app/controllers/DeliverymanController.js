@@ -1,10 +1,21 @@
 import { Op } from 'sequelize';
+import * as Yup from 'yup';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
     // Busca Entregador
-    const deliverymans = await Deliveryman.findAll();
+    const deliverymans = await Deliveryman.findAll({
+      attributes: ['id', 'name', 'email'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'name'],
+        },
+      ],
+    });
 
     // Verifica se trouxe entregador
     if (deliverymans.length === 0)
@@ -14,6 +25,18 @@ class DeliverymanController {
   }
 
   async store(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+    });
+
+    // Validação
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validação Falhou' });
+    }
+
     // Busca Entregador por Email
     const deliverymanExists = await Deliveryman.findOne({
       where: {
@@ -37,6 +60,18 @@ class DeliverymanController {
   }
 
   async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+    });
+
+    // Validação
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validação Falhou' });
+    }
+
     // Busca Entregador por ID
     const deliverymanExists = await Deliveryman.findOne({
       where: {
