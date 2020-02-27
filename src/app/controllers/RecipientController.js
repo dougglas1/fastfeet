@@ -4,6 +4,17 @@ import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
+  async index(req, res) {
+    // Busca Destinatários
+    const recipients = await Recipient.findAll();
+
+    // Verifica se trouxe destinatários
+    if (recipients.length === 0)
+      return res.status(401).json({ error: 'Nenhum Destinatário Encontrado' });
+
+    return res.json(recipients);
+  }
+
   async store(req, res) {
     // Schema de Validação
     const schema = Yup.object().shape({

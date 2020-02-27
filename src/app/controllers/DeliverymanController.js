@@ -75,7 +75,7 @@ class DeliverymanController {
     // Busca Entregador por ID
     const deliverymanExists = await Deliveryman.findOne({
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     });
 
@@ -88,7 +88,7 @@ class DeliverymanController {
     const deliverymansExistsEmail = await Deliveryman.findOne({
       where: {
         email: req.body.email,
-        id: { [Op.ne]: req.body.id },
+        id: { [Op.ne]: req.params.id },
       },
     });
 
