@@ -4,6 +4,9 @@ import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
+import RegisteredOrderMail from '../jobs/RegisteredOrderMail';
+import Queue from '../../lib/Queue';
+
 class OrderController {
   async index(req, res) {
     const orders = await Order.findAll({
@@ -80,6 +83,9 @@ class OrderController {
     });
 
     // Enviar email
+    await Queue.add(RegisteredOrderMail.key, {
+      orderConsulta,
+    });
 
     return res.json(orderConsulta);
   }

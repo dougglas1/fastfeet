@@ -8,6 +8,9 @@ import RecipientController from './app/controllers/RecipientController';
 import DevliverymanController from './app/controllers/DeliverymanController';
 import FileController from './app/controllers/FileController';
 import OrderController from './app/controllers/OrderController';
+import DeliverymanOrderController from './app/controllers/DeliverymanOrderController';
+import OrderWithdrawalController from './app/controllers/OrderWithdrawalController';
+import OrderFinishedController from './app/controllers/OrderFinishedController';
 
 import authMiddleware from './app/middleware/auth';
 import permissionMiddleware from './app/middleware/permission';
@@ -36,6 +39,7 @@ routes.get('/deliverymans', DevliverymanController.index);
 routes.post('/deliverymans', DevliverymanController.store);
 routes.put('/deliverymans/:id', DevliverymanController.update);
 routes.delete('/deliverymans/:id', DevliverymanController.delete);
+routes.get('/deliverymans/:id/orders', DeliverymanOrderController.index);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
@@ -43,5 +47,8 @@ routes.get('/orders', OrderController.index);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
 routes.delete('/orders/:id', OrderController.delete);
+
+routes.put('/finished_order/:id', OrderFinishedController.update);
+routes.put('/withdrawal_order/:id', OrderWithdrawalController.update);
 
 export default routes;
