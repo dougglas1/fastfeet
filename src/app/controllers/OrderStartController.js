@@ -1,14 +1,13 @@
-import { startOfDay, endOfDay } from 'date-fns';
+import { startOfDay, endOfDay, setHours, isAfter, isBefore } from 'date-fns';
 import { Op } from 'sequelize';
 
 import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 
-class OrderWithdrawalController {
+class OrderStartController {
   async update(req, res) {
     // Iniciar a Entrega (Atualizar start_date) - Retirar Produto
-
-    const deliveryman_id = req.params.id;
+    const { deliveryman_id, order_id } = req.params;
 
     // Busca Entregador por ID
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
@@ -18,9 +17,12 @@ class OrderWithdrawalController {
       return res.status(400).json({ error: 'Entregador não cadastrado' });
     }
 
-    const { order_id } = req.body;
-
-    const order = await Order.findByPk(order_id);
+    const order = await Order.findOne({
+      where: {
+        id: order_id,
+        deliveryman_id,
+      },
+    });
 
     // Valida se existe Encomenda
     if (!order) {
@@ -35,25 +37,13 @@ class OrderWithdrawalController {
     // Data Atual
     const currentDate = new Date();
 
-    // Monta horário de retirada entre 08:00 e 18:00
-    const schedule = [
-      '08',
-      '09',
-      '10',
-      '11',
-      '12',
-      '13',
-      '14',
-      '15',
-      '16',
-      '17',
-      '18',
-    ];
+    const start_date = setHours(startOfDay(currentDate), 8);
+    const end_date = setHours(startOfDay(currentDate), 18);
 
-    // Verifica se horário atual pode retirar a encomenda
-    const validateHour = schedule.includes(currentDate.getHours().toString());
-
-    if (!validateHour) {
+    // Permitir só retirar encomenda em horário específico
+    if (
+      !(isBefore(start_date, currentDate) && isAfter(end_date, currentDate))
+    ) {
       return res
         .status(400)
         .json({ error: 'Encomenda só pode ser retirada entre 08:00 e 18:00' });
@@ -84,4 +74,4 @@ class OrderWithdrawalController {
   }
 }
 
-export default new OrderWithdrawalController();
+export default new OrderStartController();

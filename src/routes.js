@@ -9,8 +9,8 @@ import DevliverymanController from './app/controllers/DeliverymanController';
 import FileController from './app/controllers/FileController';
 import OrderController from './app/controllers/OrderController';
 import DeliverymanOrderController from './app/controllers/DeliverymanOrderController';
-import OrderWithdrawalController from './app/controllers/OrderWithdrawalController';
-import OrderFinishedController from './app/controllers/OrderFinishedController';
+import OrderStartController from './app/controllers/OrderStartController';
+import OrderEndController from './app/controllers/OrderEndController';
 
 import authMiddleware from './app/middleware/auth';
 import permissionMiddleware from './app/middleware/permission';
@@ -50,7 +50,13 @@ routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
 routes.delete('/orders/:id', OrderController.delete);
 
-routes.put('/finished_order/:id', OrderFinishedController.update);
-routes.put('/withdrawal_order/:id', OrderWithdrawalController.update);
+routes.put(
+  '/deliveryman/:deliveryman_id/order/:order_id/start',
+  OrderStartController.update
+);
+routes.put(
+  '/deliveryman/:deliveryman_id/order/:order_id/end',
+  OrderEndController.update
+);
 
 export default routes;
