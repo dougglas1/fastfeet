@@ -58,7 +58,7 @@ class OrderController {
 
     // Valida se Recipient existe
     if (!(await Recipient.findByPk(recipient_id))) {
-      return res.status(400).json({ error: 'Destinatário não cadastro' });
+      return res.status(400).json({ error: 'Destinatário não cadastrado' });
     }
 
     // Valida se Deliveryman existe

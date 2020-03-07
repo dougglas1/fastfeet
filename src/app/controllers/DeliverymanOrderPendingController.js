@@ -1,7 +1,9 @@
+import { Op } from 'sequelize';
+
 import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 
-class DeliverymanOrderController {
+class DeliverymanOrderPendingController {
   async index(req, res) {
     // Consultar Encomendas do Entregador
     // que não estão entregues ou canceladas
@@ -19,6 +21,9 @@ class DeliverymanOrderController {
     const OrdersDeliveryman = await Order.findAll({
       where: {
         deliveryman_id,
+        canceled_at: { [Op.eq]: null },
+        start_date: { [Op.ne]: null },
+        end_date: { [Op.eq]: null },
       },
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
     });
@@ -27,4 +32,4 @@ class DeliverymanOrderController {
   }
 }
 
-export default new DeliverymanOrderController();
+export default new DeliverymanOrderPendingController();
