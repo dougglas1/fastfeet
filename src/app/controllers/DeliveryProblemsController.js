@@ -27,7 +27,7 @@ class DeliveryProblemsController {
     const order = await Order.findByPk(order_id);
 
     if (!order) {
-      return res.status(400).json({ error: 'Encomenda não cadastrado' });
+      return res.status(400).json({ error: 'Encomenda não cadastrada' });
     }
 
     const deliveryProblems = await DeliveryProblems.findAll({
@@ -64,20 +64,36 @@ class DeliveryProblemsController {
       order_id: order.id,
     });
 
-    await order.update({
+    return res.json(deliveryProblems);
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+
+    const deliveryProblems = await DeliveryProblems.findByPk(id);
+
+    if (!deliveryProblems) {
+      return res
+        .status(400)
+        .json({ error: 'Entrega não tem problemas para ser cancelada' });
+    }
+
+    const order = await Order.findByPk(deliveryProblems.order_id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'Encomenda não cadastrada' });
+    }
+
+    const orderUpdate = await order.update({
       canceled_at: new Date(),
     });
 
     // Enviar email
     // await Queue.add(RegisteredOrderMail.key, {
-    //  orderConsulta,
+    //  order,
     // });
 
-    return res.json(deliveryProblems);
-  }
-
-  async delete(req, res) {
-    return res.json();
+    return res.json(orderUpdate);
   }
 }
 

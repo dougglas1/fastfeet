@@ -60,10 +60,7 @@ routes.delete('/orders/:id', OrderController.delete);
 routes.get('/deliveries/problems', DeliveryProblemsController.index);
 routes.get('/deliveries/:id/problems', DeliveryProblemsController.show);
 routes.post('/deliveries/:id/problems', DeliveryProblemsController.store);
-routes.delete(
-  '/problem/:id/cancel_delivery',
-  DeliveryProblemsController.delete
-);
+routes.put('/problem/:id/cancel_delivery', DeliveryProblemsController.update);
 
 routes.put(
   '/deliveryman/:deliveryman_id/order/:order_id/start',
